@@ -1,0 +1,12 @@
+{
+	"name": "telegram-d",
+	"authors": [
+		"monokles"
+	],
+    "dependencies": {
+        "vibe-d": "~>0.7.28"
+    },
+	"description": "D library to create bots for Telegram",
+	"copyright": "Copyright © 2016, mono",
+	"license": "MIT"
+}
