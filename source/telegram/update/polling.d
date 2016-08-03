@@ -111,6 +111,3 @@ class PollingUpdatePolicy : UpdatePolicy
         }
     
 }
-
-
-
