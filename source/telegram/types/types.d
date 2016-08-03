@@ -562,3 +562,35 @@ struct Voice
     ///Optional. File size
     @optional int file_size;
 }
+
+/**
+ * This object represents an incoming update.
+ *
+ * Note:
+ * Only one of the optional parameters can be present in any given update.
+ */
+struct Update
+{
+    ///The update‘s unique identifier. 
+    //Update identifiers start from a certain positive number and increase sequentially. 
+    //This ID becomes especially handy if you’re using Webhooks, 
+    //since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order.
+    int update_id;
+    
+    //Optional. New incoming message of any kind — text, photo, sticker, etc.
+    @optional Message message;
+
+    ///Optional. New version of a message that is known to the bot and was edited
+    @optional Message edited_message;
+
+    /* //TODO implement inline support
+    ///Optional. New incoming inline query
+    @optional InlineQuery inline_query; 
+
+    ///Optional. The result of an inline query that was chosen by a user and sent to their chat partner.
+    @optional ChosenInlineResult chosen_inline_result;
+    */
+
+    ///Optional. New incoming callback query
+    @optional CallbackQuery callback_query;
+}
