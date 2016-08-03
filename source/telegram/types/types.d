@@ -6,6 +6,7 @@
 module telegram.types;
 
 import vibe.data.serialization;
+import vibe.data.json;
 
 /**
  * This object represents an audio file to be treated as music by the Telegram clients.
@@ -593,4 +594,30 @@ struct Update
 
     ///Optional. New incoming callback query
     @optional CallbackQuery callback_query;
+}
+
+/**
+ * This object represents the structure of a response given by the Telegram API.
+ *
+ * The response contains a JSON object, which always has a Boolean field ‘ok’ 
+ * and may have an optional String field ‘description’ with a human-readable description of the result.
+ * If ‘ok’ equals true, the request was successful and the result of the query can be found in the ‘result’ field.
+ * In case of an unsuccessful request, ‘ok’ equals false and the error is explained in the ‘description’.
+ * An Integer ‘error_code’ field is also returned, but its contents are subject to change in the future.
+ * Source: https://core.telegram.org/bots/api#making-requests
+ */
+struct QueryResponse(T)
+{
+    ///Indicates whether the request was succesful.
+    bool ok;
+
+    ///If `ok == false` then this propery holds the error message
+    @optional string description; 
+
+    ///If `ok === true` then this property holds the result
+    @optional T result;
+
+    ///If `ok == false` then this propery holds the error code
+    @optional int error_code;
+
 }
