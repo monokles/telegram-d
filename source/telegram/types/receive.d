@@ -2,8 +2,9 @@
  * This module contains all types returned by telegram as defined in https://core.telegram.org/bots/api#available-types
  *
  * The only exception to this is the FileInput type, as this is supposed to be binary data.
+ * It also contains the QueryResponse type, which defines the outer-most JSON object of responses received from the Telegram servers.
  */
-module telegram.types;
+module telegram.types.receive;
 
 import vibe.data.serialization;
 import vibe.data.json;
