@@ -7,8 +7,8 @@ import std.stdio;
 import std.string;
 import std.datetime;
 
-public import telegram.types.receive;
-public import telegram.types.send;
+public import telegram.types;
+public import telegram.methods;
 
 import telegram.update.policy;
 import telegram.update.polling;
@@ -86,20 +86,19 @@ class TelegramApi
          * Params:
          *      sendData  =   The struct to be sent. Has to be one of the structs
          *                      defined in telegram.types.send
-         * Returns: a QueryResponse!Message, which contains either error information,
+         * Returns: a QueryResponse!T, which contains either error information,
          * or a Message struct with representing the message you sent. 
          */
-        QueryResponse!Message send(T)(T sendData)
+        auto send(T)(T sendData)
         {
-            QueryResponse!Message qr;
+            QueryResponse!(T.retType) qr;
             requestHTTP(url ~ sendData.callName,
                     (scope req) {
-                        req.method = HTTPMethod.POST;
-                        req.writeJsonBody = sendData;
+                    req.method = HTTPMethod.POST;
+                    req.writeJsonBody = sendData;
                     }, (scope res) {
-                        qr = deserializeJson!(QueryResponse!Message)(res.readJson);
+                    qr = deserializeJson!(QueryResponse!(T.retType))(res.readJson);
                     });
             return qr;
         }
-
 }

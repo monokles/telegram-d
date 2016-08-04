@@ -11,7 +11,7 @@ import vibe.http.client;
 import vibe.data.json;
 
 import telegram.update.policy;
-import telegram.types.receive;
+import telegram.types;
 
 class PollingUpdatePolicy : UpdatePolicy
 {

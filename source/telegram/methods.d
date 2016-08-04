@@ -7,16 +7,17 @@
  *  See the parameters of each call described on the following page:
  *  https://core.telegram.org/bots/api#available-methods
  */
-module telegram.types.send;
+module telegram.methods;
 
-public import telegram.types.receive;
+public import telegram.types;
 
 import vibe.data.serialization;
 
-struct sendMessage(T)
+struct SendMessage(T)
 {
     static assert(is(T == long) || is(T == string));
     enum callName = "sendMessage";
+    alias retType = Message; 
 
     ///Unique identifier for the target chat or username of the target channel (in the format @channelusername)
     T chat_id;
@@ -41,5 +42,36 @@ struct sendMessage(T)
 
 }
 
+/**
+ * A simple method for testing your bot's auth token. Requires no parameters.
+ * Returns basic information about the bot in form of a User object.
+ */
+struct GetMe
+{
+    enum callName = "getMe";
+    alias retType = User;
+}
+
+struct ForwardMessage(T)
+{
+    static assert(is(T == long) || is(T == string));
+    enum callName = "forwardMessage";
+    alias retType = Message;
+
+    ///Unique identifier for the target chat or username of the target channel 
+    //(in the format @channelusername)
+    T chat_id;
+
+    ///Unique identifier for the chat where the original message was sent 
+    //(or channel username in the format @channelusername)
+    T from_chat_id;
+
+    ///Sends the message silently. iOS users will not receive a notification, 
+    //Android users will receive a notification with no sound.
+    @optional bool disable_notification;
+
+    ///Unique message identifier
+    int message_id;
+}
 
 

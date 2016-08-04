@@ -4,7 +4,7 @@
  * The only exception to this is the FileInput type, as this is supposed to be binary data.
  * It also contains the QueryResponse type, which defines the outer-most JSON object of responses received from the Telegram servers.
  */
-module telegram.types.receive;
+module telegram.types;
 
 import vibe.data.serialization;
 import vibe.data.json;
@@ -621,4 +621,13 @@ struct QueryResponse(T)
     ///If `ok == false` then this propery holds the error code
     @optional int error_code;
 
+}
+
+/**
+ * This object represents the contents of a file to be uploaded.
+ * WIP
+ */
+struct InputFile
+{
+    //TODO
 }

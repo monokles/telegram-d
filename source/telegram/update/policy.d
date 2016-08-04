@@ -3,7 +3,7 @@
  */
 module telegram.update.policy;
 
-import telegram.types.receive;
+import telegram.types;
 
 interface UpdatePolicy
 {
