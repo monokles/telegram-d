@@ -3,19 +3,14 @@
  */
 module telegram.update.policy;
 
-import telegram.types;
+import telegram.types.receive;
 
 interface UpdatePolicy
 {
     /**
-     * Starts the update-checking process.
-     *
-     * Whenever updates are received from the telegram servers, onUpdate is called.
+     * Retrieve new updates from the Telegram servers.
+     * Blocks until new updates are received.
+     * Returns: An array of Updates since you last checked
      */
-    void startListening(void delegate(scope Update[]) onUpdate);
-
-    /**
-     * Stops the update-checking process.
-     */
-    void stopListening();
+    Update[] getUpdates();
 }

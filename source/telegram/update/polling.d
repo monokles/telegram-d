@@ -11,7 +11,7 @@ import vibe.http.client;
 import vibe.data.json;
 
 import telegram.update.policy;
-import telegram.types;
+import telegram.types.receive;
 
 class PollingUpdatePolicy : UpdatePolicy
 {
@@ -19,9 +19,6 @@ class PollingUpdatePolicy : UpdatePolicy
         enum callName = "getUpdates";
         string callUrl;
         Duration updateInterval;
-        Thread listener;
-        void delegate(scope Update[]) updateCB;
-        bool stopping;
         int offset;
 
 
@@ -48,12 +45,26 @@ class PollingUpdatePolicy : UpdatePolicy
             assert(0);
         }
 
-        void checkUpdate()
+
+    public:
+        this(string baseUrl, Duration updateInterval)
         {
-            do
+            this.callUrl = baseUrl ~ callName;
+            this.updateInterval = updateInterval;
+        }
+
+        /**
+         * Request new updates
+         * Returns: An array of Updates since you last checked
+         */
+        Update[] getUpdates()
+        {
+            Update[] updates = null;
+            try
             {
-                try
+                while(!updates)
                 {
+                    //This is synchronous
                     requestHTTP(callUrl, 
                             (scope req) {
                                 req.method = HTTPMethod.POST;
@@ -62,52 +73,22 @@ class PollingUpdatePolicy : UpdatePolicy
                             (scope res) {
                                 if(res.statusCode == 200){
                                     auto upds = parseUpdateResponse(res.readJson);
-                                    if(upds)
-                                    {
-                                        offset = upds[$-1].update_id + 1;
-                                        updateCB(upds);
-                                    }
+                                if(upds)
+                                {
+                                    offset = upds[$-1].update_id + 1;
+                                    updates = upds;
                                 }
+                            }
                             });
+                    
+                    Thread.sleep(updateInterval);
                 }
-                catch(Exception e)
-                {
-                    writeln("[PollingUpdatePolicy] Exception:\n" ~ e.msg);
-                }
+            }
+            catch(Exception e)
+            {
+                writeln("[PollingUpdatePolicy] Exception:\n" ~ e.msg);
+            }
 
-                Thread.sleep(updateInterval);
-            } while(!stopping);
-            
+            return updates;
         }
-
-    public:
-        this(string baseUrl, int updateInterval)
-        {
-            this.callUrl = baseUrl ~ callName;
-            this.updateInterval = seconds(updateInterval);
-        }
-
-        /**
-         * Start listening for updates.
-         *
-         * Params:
-         *      onUpdate = delegate function to deal with all incoming Update objects
-         */
-        void startListening(void delegate(scope Update[]) onUpdate)
-        {
-            updateCB = onUpdate;
-            stopping = false;
-
-            listener = new Thread(&checkUpdate);
-            listener.start();
-        }
-
-        /**
-         * Stop listening for updates
-         */
-        void stopListening()
-        {
-            stopping = true;
-        }
-    
 }
