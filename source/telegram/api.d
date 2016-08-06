@@ -12,6 +12,7 @@ public import telegram.methods;
 
 import telegram.update.policy;
 import telegram.update.polling;
+import telegram.serialization;
 
 import vibe.data.json;
 import vibe.http.client;
@@ -51,8 +52,7 @@ class TelegramApi
             this.botName = botName;
 
             this.url = baseUrl.format(apiKey);
-            auto updater = new PollingUpdatePolicy(url, pollInterval);
-            this.updater = updater;
+            this.updater = new PollingUpdatePolicy(url, pollInterval);
         }
 
         /**
@@ -97,7 +97,9 @@ class TelegramApi
                     req.method = HTTPMethod.POST;
                     req.writeJsonBody = sendData;
                     }, (scope res) {
-                    qr = deserializeJson!(QueryResponse!(T.retType))(res.readJson);
+                    //Make sure that Messages get deserialized correctly in all cases
+                    qr = deserializeWithPolicy!(JsonSerializer, 
+                            MessagePol, (QueryResponse!(T.retType)))(res.readJson);
                     });
             return qr;
         }
