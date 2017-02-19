@@ -10,5 +10,5 @@ Currently most of the telegram bot API is implemented, except for inline bots an
 #TODO
 1. add websockets support
 2. add file up/download support
-3. add inline keyboard support
+3. add inline bot support
 4. write Bot class for convenience of use
