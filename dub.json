@@ -4,7 +4,7 @@
 		"monokles"
 	],
     "dependencies": {
-        "vibe-d": "~>0.7.28"
+        "vibe-d": "~>0.9.0"
     },
 	"description": "D library to create bots for Telegram",
 	"copyright": "Copyright © 2016, mono",
